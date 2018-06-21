@@ -178,5 +178,7 @@ RUN set -ex \
 # add build deps before removing fetch deps in case there's overlap
   && ln -s /usr/include/locale.h /usr/include/xlocale.h \
         && pip install cython tornado==4.5.2 websocket-client pytest numpy pandas scipy bokeh==0.12.10 pillow \
-        && apk del .build-deps && pip list
+        && apk del .build-deps \
+	&& apk add --no-cache  zlib jpeg openjpeg tiff tk tcl musl libxml2 libxslt xz zlib libstdc++ openblas \
+	&& pip list
 #CMD ["python3"]
