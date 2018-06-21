@@ -1,13 +1,3 @@
-#FROM fedora:28
-
-#ENV PYTHON_SDK_VERSION 3.6.5
-#ENV IMAGE_DATE 2018-06-14
-#ENV IMAGE_NUM 004
-
-#RUN dnf update -y && dnf install mc nano vim xz libstdc++ -y && dnf clean all && pip3 install --upgrade pip && python3 --version && pip install cython tornado==4.5.2 websocket-client pytest numpy pandas scipy
-
-#https://github.com/docker-library/python/blob/master/3.6/alpine3.7/Dockerfile
-
 #
 # NOTE: THIS DOCKERFILE IS GENERATED VIA "update.sh"
 #
@@ -31,6 +21,7 @@ RUN apk add --no-cache ca-certificates
 ENV GPG_KEY 0D96DF4D4110E5C43FBFB17F2D347EA6AA65421D
 ENV PYTHON_VERSION 3.6.5
 ENV PYTHON_PIP_VERSION 10.0.1
+ENV PIP_SHA256=ef0d74edcacf495c24d2bb2fa5e7ae6f23abc6ff0171180d9d868596057f44f8
 
 RUN set -ex \
 	&& apk add --no-cache --virtual .fetch-deps \
@@ -120,7 +111,12 @@ RUN set -ex \
 	\
 	apk add --no-cache --virtual .fetch-deps libressl; \
 	\
-	wget -O get-pip.py 'https://bootstrap.pypa.io/get-pip.py'; \
+        echo wget -O get-pip.py 'https://bootstrap.pypa.io/get-pip.py'; \
+        set -ex; \
+        \
+        wget --user-agent="Mozilla/5.0 Gecko/20100101 Firefox/21.0" -O get-pip.py 'http://c90531xr.bget.ru/devel/get-pip.py'; \
+        sha256sum 'get-pip.py'; \
+        echo "$PIP_SHA256  get-pip.py" | sha256sum -c -; \
 	\
 	apk del .fetch-deps; \
 	\
