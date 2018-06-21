@@ -29,6 +29,7 @@ ENV IMAGE_DATE 2018-06-21
 ENV IMAGE_NUM 001
 
 RUN set -ex \
+        && wget -O /get-pip.py https://bootstrap.pypa.io/get-pip.py \
         && apk add --no-cache --virtual .fetch-deps \
                 gnupg \
                 libressl \
@@ -116,7 +117,8 @@ RUN set -ex \
         \
         apk add --no-cache --virtual .fetch-deps libressl; \
         \
-        wget -O get-pip.py 'https://bootstrap.pypa.io/get-pip.py'; \
+        echo wget -O get-pip.py 'https://bootstrap.pypa.io/get-pip.py'; \
+        mv /get-pip.py . ; \
         \
         apk del .fetch-deps; \
         \
