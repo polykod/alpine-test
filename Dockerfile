@@ -1,3 +1,4 @@
+
 #
 # NOTE: THIS DOCKERFILE IS GENERATED VIA "update.sh"
 #
@@ -21,7 +22,6 @@ RUN apk add --no-cache ca-certificates
 ENV GPG_KEY 0D96DF4D4110E5C43FBFB17F2D347EA6AA65421D
 ENV PYTHON_VERSION 3.6.5
 ENV PYTHON_PIP_VERSION 10.0.1
-ENV PIP_SHA256=ef0d74edcacf495c24d2bb2fa5e7ae6f23abc6ff0171180d9d868596057f44f8
 
 RUN set -ex \
 	&& apk add --no-cache --virtual .fetch-deps \
@@ -98,25 +98,24 @@ RUN set -ex \
 			\( -type f -a \( -name '*.pyc' -o -name '*.pyo' \) \) \
 		\) -exec rm -rf '{}' + \
 	&& rm -rf /usr/src/python \
+\
 # make some useful symlinks that are expected to exist
-        cd /usr/local/bin \
+#RUN cd /usr/local/bin \
+        && cd /usr/local/bin \
 	&& ln -s idle3 idle \
 	&& ln -s pydoc3 pydoc \
 	&& ln -s python3 python \
 	&& ln -s python3-config python-config \
-# if this is called "PIP_VERSION", pip explodes with "ValueError: invalid truth value '<VERSION>'"
-# ENV PYTHON_PIP_VERSION 10.0.1
 \
-       &&  set -ex; \
+# if this is called "PIP_VERSION", pip explodes with "ValueError: invalid truth value '<VERSION>'"
+#ENV PYTHON_PIP_VERSION 10.0.1
+#
+#RUN set -ex; \
+       && set -ex; \
 	\
 	apk add --no-cache --virtual .fetch-deps libressl; \
 	\
-        echo wget -O get-pip.py 'https://bootstrap.pypa.io/get-pip.py'; \
-        set -ex; \
-        \
-        wget --user-agent="Mozilla/5.0 Gecko/20100101 Firefox/21.0" -O get-pip.py 'http://c90531xr.bget.ru/devel/get-pip.py'; \
-        sha256sum 'get-pip.py'; \
-        echo "$PIP_SHA256  get-pip.py" | sha256sum -c -; \
+	wget -O get-pip.py 'https://bootstrap.pypa.io/get-pip.py'; \
 	\
 	apk del .fetch-deps; \
 	\
@@ -133,9 +132,10 @@ RUN set -ex \
 			-o \
 			\( -type f -a \( -name '*.pyc' -o -name '*.pyo' \) \) \
 		\) -exec rm -rf '{}' +; \
-	rm -f get-pip.py \
+	rm -f get-pip.py; \
 \
-      && apk add --no-cache --virtual .build-deps  \
+#RUN apk add --no-cache --virtual .build-deps  \
+         apk add --no-cache --virtual .build-deps  \
                 gfortran \
 		build-base \
                 openblas-dev \
